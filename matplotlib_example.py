@@ -15,15 +15,18 @@ h, w, l = DTU_image.shape
 print(w//3)
 
 
-column0 = DTU_image[:, 0:233, :] 
-column1 = DTU_image[:, 233:466, :] 
-column2 = DTU_image[:, 466:, :] 
+column0 = DTU_image[:, 0:233, :]
+column1 = DTU_image[:, 233:466, :]
+column2 = DTU_image[:, 466:, :]
 
 mosaic = np.column_stack((column2, column1, column0))
 
 fig, ax = plt.subplots()
 ax.imshow(mosaic)
 
+
+
+   
 
 #%% making a red background and pasting a part of the image
 red_image = np.zeros((350, 350, 3), dtype=np.uint8)
@@ -38,6 +41,3 @@ ax.imshow(red_image)
 
 def extract_image_blocks(image, blocks_shape):
     h, w, l = image.shape
-    
-
-
