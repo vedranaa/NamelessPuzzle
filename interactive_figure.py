@@ -21,7 +21,6 @@ def switch_images(images):
         ax.imshow(images[i])
         ax.set_title(f'image {i}')
         fig.canvas.draw()
-        plt.show()
 
     def key_press(event):
         nonlocal i
