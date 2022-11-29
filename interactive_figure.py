@@ -1,19 +1,21 @@
 #%%
+import matplotlib
 import matplotlib.pyplot as plt
 import PIL.Image
 import numpy as np
 
+matplotlib.use('Qt5Agg')  # choose a suitable backend 
 
 def switch_images(images):
 
     def arrow_navigation(event, i, I):
-        if event.key == 'w':
+        if event.key == 'up':
             i = (i+1) % I
-        elif event.key == 'z':
+        elif event.key == 'down':
             i = (i-1) % I 
-        elif event.key == 's':
+        elif event.key == 'right':
             i = (i+1) % I
-        elif event.key == 'a':
+        elif event.key == 'left':
             i = (i-1) % I
         return i
 
@@ -50,7 +52,5 @@ images = [image1, image2, image3, image4, image5]
 switch_images(images)
 
 
-
    
-
 # %%
