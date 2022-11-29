@@ -7,13 +7,13 @@ import numpy as np
 def switch_images(images):
 
     def arrow_navigation(event, i, I):
-        if event.key == "up":
+        if event.key == 'w':
             i = (i+1) % I
-        elif event.key == 'down':
+        elif event.key == 'z':
             i = (i-1) % I 
-        elif event.key == 'right':
+        elif event.key == 's':
             i = (i+1) % I
-        elif event.key == 'left':
+        elif event.key == 'a':
             i = (i-1) % I
         return i
 
