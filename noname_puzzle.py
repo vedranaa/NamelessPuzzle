@@ -2,6 +2,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import PIL.Image
+import matplotlib
+matplotlib.use('Qt5Agg')  # choose a suitable backend 
+
 
 def divide_image(image, blocks_shape):
     '''Divides image into blocks of shape blocks_shape = (H, W)'''
@@ -9,6 +12,7 @@ def divide_image(image, blocks_shape):
     h, w, l = image.shape
     bH = h // H
     bW = w // W
+
     blocks = np.empty(blocks_shape + (bH, bW, l), dtype=image.dtype)
     for i in range(H):
         for j in range(W):
@@ -41,32 +45,30 @@ def initiate_status(blocks_shape):
     status = np.arange(H*W).reshape((H, W))
     return status
 
-#%% Testing the functions
 
-filename = 'DTU_700x350.jpg'
-DTU_image = np.array(PIL.Image.open(filename))
-H, W  = (5, 6)  # blocks shape
-blocks = divide_image(DTU_image, (H, W))
+def noname_puzzle(image, H, W=None):
+    '''Main function for noname puzzle.'''
 
-#  Showing blocks
-fig, ax = plt.subplots(H, W)
-for i in range(H):
-    for j in range(W):
-        ax[i][j].imshow(blocks[i][j])
-plt.show()
+    def key_press(event):
+        nonlocal status
+        if event.key == 'm':
+            status = shuffle_status(status)
 
-status0 = initiate_status((H, W))
-image0 = join_image(blocks, status0)
+        ax.imshow(join_image(blocks, status))
+        fig.canvas.draw()
 
-fig, ax = plt.subplots()
-ax.imshow(image0)
-plt.show()
+    if W is None:
+        W = H
 
-status = shuffle_status(status0)
-image = join_image(blocks, status)
-
-fig, ax = plt.subplots()
-ax.imshow(image)
-plt.show()
+    fig, ax = plt.subplots()
+    ax.imshow(image)
+    blocks = divide_image(image, (H, W))
+    status = initiate_status((H, W))
+    
+    fig.canvas.mpl_connect('key_press_event', key_press)
+    plt.axis('off')
+    plt.show()
 
 
+DTU_image = np.array(PIL.Image.open('DTU_700x350.jpg'))
+noname_puzzle(DTU_image, 5)

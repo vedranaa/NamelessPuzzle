@@ -38,7 +38,6 @@ def switch_images(images):
     plt.show()
 
 
-
 image1 = np.array(PIL.Image.open('DTU_700x350.jpg'))
 cz = np.array(PIL.Image.open('captn_zenitsu.jpg'))
 
