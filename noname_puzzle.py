@@ -29,9 +29,10 @@ def join_image(blocks, status):
     for i in range(H):
         for j in range(W):
             b = status[i, j]
-            bi = b//W
-            bj = b%W
-            image[i * bH : (i + 1) * bH, j * bW : (j + 1) * bW] = blocks[bi, bj]
+            if b > 0:
+                bi = b//W
+                bj = b%W
+                image[i * bH : (i + 1) * bH, j * bW : (j + 1) * bW] = blocks[bi, bj]
     return image
 
 def shuffle_status(status):
@@ -45,6 +46,30 @@ def initiate_status(blocks_shape):
     status = np.arange(H*W).reshape((H, W))
     return status
 
+def move_status(status, key):
+    '''Key can be 'up', 'down', 'right' or 'left' '''
+    
+    H, W = status.shape
+    y = np.where(status==0)[0][0] 
+    x = np.where(status==0)[1][0]
+
+    print(f'Standing at ({x},{y})')
+
+    if key=='down' and y+1<H:
+        new_x = x
+        new_y = y + 1
+        print(f'Moving {key}!')
+    # elif key=='up'  # add here for other directions
+
+    status[y,x] = status[new_y, new_x]
+    status[new_y, new_x] = 0
+
+    print(status)
+
+    return status
+
+
+
 
 def noname_puzzle(image, H, W=None):
     '''Main function for noname puzzle.'''
@@ -53,6 +78,8 @@ def noname_puzzle(image, H, W=None):
         nonlocal status
         if event.key == 'm':
             status = shuffle_status(status)
+        if event.key in ['up', 'down', 'right', 'left']:
+            status = move_status(status, event.key)
 
         ax.imshow(join_image(blocks, status))
         fig.canvas.draw()
