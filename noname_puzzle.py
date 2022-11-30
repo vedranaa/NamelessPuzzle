@@ -53,18 +53,21 @@ def move_status(status, key):
     y = np.where(status==0)[0][0] 
     x = np.where(status==0)[1][0]
 
-    print(f'Standing at ({x},{y})')
-
     if key=='down' and y+1<H:
         new_x = x
-        new_y = y + 1
-        print(f'Moving {key}!')
-    # elif key=='up'  # add here for other directions
-
+        new_y = y + 1         
+    elif key=='up' and y>0:
+        new_x = x
+        new_y = y - 1
+    elif key=='right' and x+1<W:
+        new_x = x + 1
+        new_y = y 
+    elif key=='left' and x>0:
+         new_x = x - 1
+         new_y = y 
+ 
     status[y,x] = status[new_y, new_x]
     status[new_y, new_x] = 0
-
-    print(status)
 
     return status
 
@@ -98,4 +101,4 @@ def noname_puzzle(image, H, W=None):
 
 
 DTU_image = np.array(PIL.Image.open('DTU_700x350.jpg'))
-noname_puzzle(DTU_image, 5)
+noname_puzzle(DTU_image, 4)
