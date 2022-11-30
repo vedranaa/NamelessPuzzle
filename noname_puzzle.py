@@ -84,7 +84,7 @@ def noname_puzzle(image, H, W=None):
         if event.key in ['up', 'down', 'right', 'left']:
             status = move_status(status, event.key)
 
-        ax.imshow(join_image(blocks, status))
+        ax.images[0].set_array(join_image(blocks, status))
         fig.canvas.draw()
 
     if W is None:
