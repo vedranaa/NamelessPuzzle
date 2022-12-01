@@ -106,6 +106,9 @@ def noname_puzzle(image, H, W=None):
             status = move_status(status, event.key)
         if event.key =='h':
             ds = not(ds)
+            if not ds:
+                while (ax.texts):
+                    ax.texts[-1].remove()  
 
         ax.images[0].set_array(join_image(blocks, status))        
         if ds:
