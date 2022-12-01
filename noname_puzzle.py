@@ -53,6 +53,7 @@ def move_status(status, key):
     y = np.where(status==0)[0][0] 
     x = np.where(status==0)[1][0]
 
+    move = True
     if key=='down' and y+1<H:
         new_x = x
         new_y = y + 1         
@@ -63,15 +64,33 @@ def move_status(status, key):
         new_x = x + 1
         new_y = y 
     elif key=='left' and x>0:
-         new_x = x - 1
-         new_y = y 
- 
-    status[y,x] = status[new_y, new_x]
-    status[new_y, new_x] = 0
+        new_x = x - 1
+        new_y = y
+    else:
+        move = False
+
+    if move: 
+        status[y,x] = status[new_y, new_x]
+        status[new_y, new_x] = 0
 
     return status
 
+def display_status(ax, status, blocks_shape):
+    
+    # remove any previously shown texts
+    while (ax.texts):
+        ax.texts[-1].remove()  
 
+    # show status on top of the image    
+    H, W, bH, bW, l = blocks_shape
+    for i in range(H):
+        for j in range(W):
+            x = j * bW + bW / 2
+            y = i * bH + bH / 2
+            nr = str(status[i, j])
+            ax.text(x, y, nr, 
+                    horizontalalignment='center', verticalalignment='center', 
+                    fontsize=20, color='r')  #  backgroundcolor='w'
 
 
 def noname_puzzle(image, H, W=None):
@@ -79,26 +98,35 @@ def noname_puzzle(image, H, W=None):
 
     def key_press(event):
         nonlocal status
+        nonlocal ds
+
         if event.key == 'm':
             status = shuffle_status(status)
         if event.key in ['up', 'down', 'right', 'left']:
             status = move_status(status, event.key)
+        if event.key =='h':
+            ds = not(ds)
 
-        ax.images[0].set_array(join_image(blocks, status))
+        ax.images[0].set_array(join_image(blocks, status))        
+        if ds:
+            display_status(ax, status, blocks.shape)
         fig.canvas.draw()
 
     if W is None:
         W = H
 
-    fig, ax = plt.subplots()
-    ax.imshow(image)
     blocks = divide_image(image, (H, W))
     status = initiate_status((H, W))
-    
+    ds = False  # no status show to begin with
+
+    fig, ax = plt.subplots()
+    ax.imshow(join_image(blocks, status))
     fig.canvas.mpl_connect('key_press_event', key_press)
     plt.axis('off')
     plt.show()
 
 
 DTU_image = np.array(PIL.Image.open('DTU_700x350.jpg'))
-noname_puzzle(DTU_image, 4)
+noname_puzzle(DTU_image, 4, 5)
+
+# %%
