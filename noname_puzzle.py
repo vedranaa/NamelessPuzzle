@@ -40,11 +40,13 @@ def shuffle_status(status):
     status = np.random.permutation(status.ravel()).reshape(status.shape)
     return status
 
+
 def initiate_status(blocks_shape):
     '''Initiates status matrix acoording to the blocks shape = (H, M).'''
     H, W = blocks_shape
     status = np.arange(H*W).reshape((H, W))
     return status
+
 
 def move_status(status, key):
     '''Key can be 'up', 'down', 'right' or 'left' '''
@@ -75,33 +77,53 @@ def move_status(status, key):
 
     return status
 
-def display_status(ax, status, blocks_shape):
-    
-    # remove any previously shown texts
-    while (ax.texts):
-        ax.texts[-1].remove()  
-
-    # show status on top of the image    
-    H, W, bH, bW, l = blocks_shape
-    for i in range(H):
-        for j in range(W):
-            x = j * bW + bW / 2
-            y = i * bH + bH / 2
-            nr = str(status[i, j])
-            ax.text(x, y, nr, 
-                    horizontalalignment='center', verticalalignment='center', 
-                    fontsize=20, color='r')  #  backgroundcolor='w'
 
 
 def noname_puzzle(image, H, W=None):
     '''Main function for noname puzzle.'''
 
+    def simulate_swapping_status():
+        '''Simulates randomly hitting arrow key neighbourg N times.'''
+        nonlocal status
+        nonlocal swapping
+        swapping = True
+        N = 20  # number of steps taken
+        pause = 0.1  # length of pause
+        keys = ['up', 'down', 'left', 'right']
+        rand = (np.random.randint(2, size=(N//2, 2)) + [0, 2]).ravel()
+        for r in rand:
+            status = move_status(status, keys[r])
+            update_display()
+            plt.pause(pause)
+        swapping = False
+    
+    def update_display():
+        
+        ax.images[0].set_array(join_image(blocks, status))        
+        if ds:
+            # remove any previously shown texts
+            while (ax.texts):
+                ax.texts[-1].remove()  
+
+            # show status on top of the image    
+            for i in range(H):
+                for j in range(W):
+                    x = j * bW + bW / 2
+                    y = i * bH + bH / 2
+                    nr = str(status[i, j])
+                    ax.text(x, y, nr, 
+                            horizontalalignment='center', verticalalignment='center', 
+                            fontsize=20, color='r')  #  backgroundcolor='w'
+        fig.canvas.draw()
+        
     def key_press(event):
         nonlocal status
         nonlocal ds
 
-        if event.key == 'm':
-            status = shuffle_status(status)
+        # if event.key == 'm':
+        #     status = shuffle_status(status)
+        if event.key == 'r' and not swapping:
+            simulate_swapping_status()
         if event.key in ['up', 'down', 'right', 'left']:
             status = move_status(status, event.key)
         if event.key =='h':
@@ -110,17 +132,17 @@ def noname_puzzle(image, H, W=None):
                 while (ax.texts):
                     ax.texts[-1].remove()  
 
-        ax.images[0].set_array(join_image(blocks, status))        
-        if ds:
-            display_status(ax, status, blocks.shape)
-        fig.canvas.draw()
+        update_display()
 
     if W is None:
         W = H
 
     blocks = divide_image(image, (H, W))
+    H, W, bH, bW, l = blocks.shape
+
     status = initiate_status((H, W))
     ds = False  # no status show to begin with
+    swapping = False  # to keep track of swapping
 
     fig, ax = plt.subplots()
     ax.imshow(join_image(blocks, status))
@@ -130,6 +152,6 @@ def noname_puzzle(image, H, W=None):
 
 
 DTU_image = np.array(PIL.Image.open('DTU_700x350.jpg'))
-noname_puzzle(DTU_image, 4, 5)
+noname_puzzle(DTU_image, 3, 4)
 
 # %%
