@@ -136,6 +136,8 @@ def noname_puzzle(image, H, W=None):
     if W is None:
         W = H
 
+    image = np.array(image)  # such that image also can be PIL image
+
     blocks = divide_image(image, (H, W))
     H, W, bH, bW, l = blocks.shape
 
