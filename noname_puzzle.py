@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import PIL.Image
 import matplotlib
-matplotlib.use('Qt5Agg')  # choose a suitable backend 
 
 
 def divide_image(image, blocks_shape):
@@ -150,8 +149,10 @@ def noname_puzzle(image, H, W=None):
     plt.axis('off')
     plt.show()
 
-
-DTU_image = np.array(PIL.Image.open('DTU_700x350.jpg'))
-noname_puzzle(DTU_image, 3, 4)
+if __name__  ==  '__main__':
+   
+    matplotlib.use('Qt5Agg')  # choose a suitable backend 
+    DTU_image = np.array(PIL.Image.open('DTU_700x350.jpg'))
+    noname_puzzle(DTU_image, 3, 4)
 
 # %%
