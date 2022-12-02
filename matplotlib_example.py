@@ -25,9 +25,6 @@ fig, ax = plt.subplots()
 ax.imshow(mosaic)
 
 
-
-   
-
 #%% making a red background and pasting a part of the image
 red_image = np.zeros((350, 350, 3), dtype=np.uint8)
 red_image[:,:,0] = 255

@@ -41,6 +41,7 @@ def initiate_status(blocks_shape):
     status = np.arange(H*W).reshape((H, W))
     return status
 
+
 #%% Testing the functions
 
 filename = 'DTU_700x350.jpg'
@@ -65,8 +66,26 @@ plt.show()
 status = shuffle_status(status0)
 image = join_image(blocks, status)
 
+#%%
+
+def display_status(ax, status, blocks_shape):
+    H, W, bH, bW, l = blocks_shape
+    for i in range(H):
+        for j in range(W):
+            x = j * bW + bW / 2
+            y = i * bH + bH / 2
+            nr = str(status[i, j])
+            ax.text(x, y, nr, 
+                    horizontalalignment='center', verticalalignment='center', 
+                    fontsize=20, color='r')  #  backgroundcolor='w')
+
+
 fig, ax = plt.subplots()
 ax.imshow(image)
+display_status(ax, status, blocks.shape)
+print(ax.texts)
+
 plt.show()
 
 
+# %%
