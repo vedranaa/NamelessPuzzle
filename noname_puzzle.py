@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import PIL.Image
 import matplotlib
 
+# just checking whether git is working
+
 
 def divide_image(image, blocks_shape):
     '''Divides image into blocks of shape blocks_shape = (H, W)'''
@@ -49,28 +51,28 @@ def initiate_status(blocks_shape):
 
 def move_status(status, key):
     '''Key can be 'up', 'down', 'right' or 'left' '''
-    
+
     H, W = status.shape
-    y = np.where(status==0)[0][0] 
+    y = np.where(status==0)[0][0]
     x = np.where(status==0)[1][0]
 
     move = True
     if key=='down' and y+1<H:
         new_x = x
-        new_y = y + 1         
+        new_y = y + 1
     elif key=='up' and y>0:
         new_x = x
         new_y = y - 1
     elif key=='right' and x+1<W:
         new_x = x + 1
-        new_y = y 
+        new_y = y
     elif key=='left' and x>0:
         new_x = x - 1
         new_y = y
     else:
         move = False
 
-    if move: 
+    if move:
         status[y,x] = status[new_y, new_x]
         status[new_y, new_x] = 0
 
@@ -95,26 +97,26 @@ def noname_puzzle(image, H, W=None):
             update_display()
             plt.pause(pause)
         swapping = False
-    
+
     def update_display():
-        
-        ax.images[0].set_array(join_image(blocks, status))        
+
+        ax.images[0].set_array(join_image(blocks, status))
         if ds:
             # remove any previously shown texts
             while (ax.texts):
-                ax.texts[-1].remove()  
+                ax.texts[-1].remove()
 
-            # show status on top of the image    
+            # show status on top of the image
             for i in range(H):
                 for j in range(W):
                     x = j * bW + bW / 2
                     y = i * bH + bH / 2
                     nr = str(status[i, j])
-                    ax.text(x, y, nr, 
-                            horizontalalignment='center', verticalalignment='center', 
+                    ax.text(x, y, nr,
+                            horizontalalignment='center', verticalalignment='center',
                             fontsize=20, color='r')  #  backgroundcolor='w'
         fig.canvas.draw()
-        
+
     def key_press(event):
         nonlocal status
         nonlocal ds
@@ -129,7 +131,7 @@ def noname_puzzle(image, H, W=None):
             ds = not(ds)
             if not ds:
                 while (ax.texts):
-                    ax.texts[-1].remove()  
+                    ax.texts[-1].remove()
 
         update_display()
 
@@ -152,8 +154,8 @@ def noname_puzzle(image, H, W=None):
     plt.show()
 
 if __name__  ==  '__main__':
-   
-    matplotlib.use('Qt5Agg')  # choose a suitable backend 
+
+    matplotlib.use('Qt5Agg')  # choose a suitable backend
     DTU_image = np.array(PIL.Image.open('DTU_700x350.jpg'))
     noname_puzzle(DTU_image, 3, 4)
 
